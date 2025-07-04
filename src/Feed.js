@@ -9,9 +9,13 @@ function Feed() {
   const [posts, setPosts] = useState([]);
 
   useEffect(() => {
-    db.collection("posts").onSnapshot((snapshot) =>
-      setPosts(snapshot.docs.map((doc) => doc.data()))
+    const unsubscribe = db.collection("posts").onSnapshot((snapshot) =>
+      setPosts(
+        snapshot.docs.map((doc) => ({ id: doc.id, ...doc.data() }))
+      )
     );
+
+    return () => unsubscribe();
   }, []);
 
   return (
@@ -25,7 +29,7 @@ function Feed() {
       <FlipMove>
         {posts.map((post) => (
           <Post
-            key={post.text}
+            key={post.id || post.text}
             displayName={post.displayName}
             username={post.username}
             verified={post.verified}
