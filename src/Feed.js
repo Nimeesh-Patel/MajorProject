@@ -8,11 +8,15 @@ import FlipMove from "react-flip-move";
 function Feed() {
   const [posts, setPosts] = useState([]);
 
-  // useEffect(() => {
-  //   db.collection("posts").onSnapshot((snapshot) =>
-  //     setPosts(snapshot.docs.map((doc) => doc.data()))
-  //   );
-  // }, []);
+  useEffect(() => {
+    const unsubscribe = db.collection("posts").onSnapshot((snapshot) =>
+      setPosts(
+        snapshot.docs.map((doc) => ({ id: doc.id, ...doc.data() }))
+      )
+    );
+
+    return unsubscribe;
+  }, []);
 
   return (
     <div className="feed">
