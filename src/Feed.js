@@ -8,6 +8,10 @@ import FlipMove from "react-flip-move";
 function Feed() {
   const [posts, setPosts] = useState([]);
 
+  const addTweet = (tweet) => {
+    setPosts((prev) => [tweet, ...prev]);
+  };
+
   useEffect(() => {
     const unsubscribe = db.collection("posts").onSnapshot((snapshot) =>
       setPosts(
@@ -24,12 +28,12 @@ function Feed() {
         <h2>Home</h2>
       </div>
 
-      <TweetBox />
+      <TweetBox onTweet={addTweet} />
 
       <FlipMove>
         {posts.map((post) => (
           <Post
-            key={post.text}
+            key={post.id || post.text}
             displayName={post.displayName}
             username={post.username}
             verified={post.verified}
