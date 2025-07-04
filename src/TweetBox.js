@@ -6,6 +6,8 @@ import db from "./firebase";
 function TweetBox() {
   const [tweetMessage, setTweetMessage] = useState("");
   const [tweetImage, setTweetImage] = useState("");
+  const [localTweets, setLocalTweets] = useState([]); // Add local state for temporary tweets
+
   const sendTweet = (e) => {
     e.preventDefault();
     if (tweetMessage.trim() === "") return;
@@ -44,11 +46,14 @@ function TweetBox() {
           type="text"
         />
 
-        <Button
-          onClick={sendTweet}
-          type="submit"
-          className="tweetBox__tweetButton"
-        >
+<Button
+  onClick={async (e) => {
+    e.preventDefault();
+    await checkForHateSpeech(tweetMessage);
+  }}
+  type="submit"
+  className="tweetBox__tweetButton"
+>
           Tweet
         </Button>
       </form>
