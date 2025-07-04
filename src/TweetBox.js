@@ -31,7 +31,7 @@ function TweetBox() {
 
   return (
     <div className="tweetBox">
-      <form>
+      <form onSubmit={sendTweet}>
         <div className="tweetBox__input">
           <Avatar src="https://kajabi-storefronts-production.global.ssl.fastly.net/kajabi-storefronts-production/themes/284832/settings_images/rLlCifhXRJiT0RoN2FjK_Logo_roundbackground_black.png" />
           <input
@@ -49,11 +49,7 @@ function TweetBox() {
           type="text"
         />
 
-        <Button
-          onClick={sendTweet}
-          type="submit"
-          className="tweetBox__tweetButton"
-        >
+        <Button type="submit" className="tweetBox__tweetButton">
           Tweet
         </Button>
       </form>
