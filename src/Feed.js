@@ -9,9 +9,13 @@ function Feed() {
   const [posts, setPosts] = useState([]);
 
   useEffect(() => {
-    db.collection("posts").onSnapshot((snapshot) =>
-      setPosts(snapshot.docs.map((doc) => doc.data()))
+    const unsubscribe = db.collection("posts").onSnapshot((snapshot) =>
+      setPosts(
+        snapshot.docs.map((doc) => ({ id: doc.id, ...doc.data() }))
+      )
     );
+
+    return unsubscribe;
   }, []);
 
   return (
@@ -23,17 +27,19 @@ function Feed() {
       <TweetBox />
 
       <FlipMove>
-        {posts.map((post) => (
-          <Post
-            key={post.text}
-            displayName={post.displayName}
-            username={post.username}
-            verified={post.verified}
-            text={post.text}
-            avatar={post.avatar}
-            image={post.image}
-          />
-        ))}
+        {posts.map(
+          ({ id, displayName, username, verified, text, avatar, image }) => (
+            <Post
+              key={id}
+              displayName={displayName}
+              username={username}
+              verified={verified}
+              text={text}
+              avatar={avatar}
+              image={image}
+            />
+          )
+        )}
       </FlipMove>
     </div>
   );

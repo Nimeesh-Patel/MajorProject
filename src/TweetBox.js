@@ -6,7 +6,8 @@ import db from "./firebase";
 function TweetBox() {
   const [tweetMessage, setTweetMessage] = useState("");
   const [tweetImage, setTweetImage] = useState("");
-  const [localTweets, setLocalTweets] = useState([]); // Add local state for temporary tweets
+  // Maintain temporary tweets locally; each tweet gets a unique id for stable keys
+  const [localTweets, setLocalTweets] = useState([]);
 
   const sendTweet = (e) => {
     e.preventDefault();
@@ -15,6 +16,7 @@ function TweetBox() {
       setLocalTweets([
         ...localTweets,
         {
+          id: Date.now(),
           displayName: "Rafeh Qazi",
           username: "cleverqazi",
           verified: true,
@@ -31,7 +33,7 @@ function TweetBox() {
 
   return (
     <div className="tweetBox">
-      <form>
+      <form onSubmit={sendTweet}>
         <div className="tweetBox__input">
           <Avatar src="https://kajabi-storefronts-production.global.ssl.fastly.net/kajabi-storefronts-production/themes/284832/settings_images/rLlCifhXRJiT0RoN2FjK_Logo_roundbackground_black.png" />
           <input
@@ -49,19 +51,15 @@ function TweetBox() {
           type="text"
         />
 
-        <Button
-          onClick={sendTweet}
-          type="submit"
-          className="tweetBox__tweetButton"
-        >
+        <Button type="submit" className="tweetBox__tweetButton">
           Tweet
         </Button>
       </form>
       {/* Show local tweets below input */}
       <div style={{ marginTop: 20 }}>
-        {localTweets.map((tweet, idx) => (
+        {localTweets.map((tweet) => (
           <div
-            key={idx}
+            key={tweet.id}
             style={{
               border: "1px solid #e6ecf0",
               borderRadius: 10,
