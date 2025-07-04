@@ -3,6 +3,9 @@ This project was bootstrapped with [Create React App](https://github.com/faceboo
 ## Configuration
 
 Copy `.env.example` to `.env` and provide your Firebase credentials before running the app.
+Setting `GENERATE_SOURCEMAP=false` in your `.env` file will disable source map
+generation, which prevents warnings about missing maps from some Firebase
+packages.
 
 ## Available Scripts
 
