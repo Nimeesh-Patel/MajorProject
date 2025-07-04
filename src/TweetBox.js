@@ -7,6 +7,40 @@ function TweetBox() {
   const [tweetMessage, setTweetMessage] = useState("");
   const [tweetImage, setTweetImage] = useState("");
   const [localTweets, setLocalTweets] = useState([]); // Add local state for temporary tweets
+const checkForHateSpeech = async (text) => {
+  try {
+    const response = await fetch("http://127.0.0.1:8000/predict", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({ text }),
+    });
+
+    const data = await response.json();
+    console.log("Prediction:", data.prediction);
+
+    return data.prediction; // e.g., "Hate Speech" or "Not Hate Speech"
+  } catch (error) {
+    console.error("Error during hate speech detection:", error);
+    return null;
+  }
+};
+const handleTweetClick = async (e) => {
+  e.preventDefault();
+
+  if (tweetMessage.trim() === "") return;
+
+  const prediction = await checkForHateSpeech(tweetMessage);
+
+  if (prediction === "Hate Speech") {
+    alert("⚠️ This tweet contains hate speech and cannot be posted.");
+    return;
+  }
+
+  sendTweet(e); // Safe to proceed
+};
+
 
   const sendTweet = (e) => {
     e.preventDefault();
@@ -49,11 +83,14 @@ function TweetBox() {
           type="text"
         />
 
-        <Button
-          onClick={sendTweet}
-          type="submit"
-          className="tweetBox__tweetButton"
-        >
+<Button
+  onClick={async (e) => {
+    e.preventDefault();
+    await checkForHateSpeech(tweetMessage);
+  }}
+  type="submit"
+  className="tweetBox__tweetButton"
+>
           Tweet
         </Button>
       </form>
