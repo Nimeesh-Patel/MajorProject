@@ -9,8 +9,8 @@ function Feed() {
   const [posts, setPosts] = useState([]);
 
   useEffect(() => {
-    db.collection("posts").onSnapshot((snapshot) =>
-      setPosts(snapshot.docs.map((doc) => doc.data()))
+    return db.collection("posts").onSnapshot((snapshot) =>
+      setPosts(snapshot.docs.map((doc) => ({ id: doc.id, ...doc.data() })))
     );
   }, []);
 
@@ -23,9 +23,9 @@ function Feed() {
       <TweetBox />
 
       <FlipMove>
-        {posts.map((post) => (
-          <Post
-            key={post.text}
+          {posts.map((post) => (
+            <Post
+              key={post.id || post.text}
             displayName={post.displayName}
             username={post.username}
             verified={post.verified}
